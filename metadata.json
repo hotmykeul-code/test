@@ -1,0 +1,6 @@
+{
+  "name": "SocialClone AI",
+  "description": "Plateforme de clonage d'identité numérique, studio de création de contenu IA multi-formats, copilote DM et planificateur intelligent pour créateurs.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
