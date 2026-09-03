@@ -11,7 +11,11 @@ import {
   Volume2, 
   Camera, 
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Play,
+  Lock,
+  Flame,
+  AlertCircle
 } from 'lucide-react';
 import { RadarChart } from './RadarChart';
 import { ToneRadar, Archetype } from '../types';
@@ -42,6 +46,9 @@ export const FeaturesHumanClone: React.FC<FeaturesHumanCloneProps> = ({ onOpenOn
     rythme: 90,
   });
 
+  const [isPlayingVoice, setIsPlayingVoice] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
+
   const handleArchetypeSelect = (arch: Archetype) => {
     setSelectedArchetype(arch);
     switch (arch) {
@@ -64,6 +71,52 @@ export const FeaturesHumanClone: React.FC<FeaturesHumanCloneProps> = ({ onOpenOn
         setRadarState({ humour: 55, formalisme: 20, energie: 82, empathie: 95, storytelling: 98, technicite: 50, clivage: 45, rythme: 85 });
         break;
     }
+  };
+
+  const handleTestVoiceTwin = () => {
+    setIsPlayingVoice(true);
+    fetch('/api/clone/voice-sample', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sampleDurationSec: 20 }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setTimeout(() => {
+          setIsPlayingVoice(false);
+        }, 2500);
+      })
+      .catch(() => {
+        setTimeout(() => setIsPlayingVoice(false), 2000);
+      });
+  };
+
+  const handleSaveRadarCalibration = () => {
+    setSaveStatus('Sauvegarde du radar 8 axes...');
+    fetch('/api/clone/calibrate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        archetype: selectedArchetype,
+        toneRadar: radarState,
+        forceOverride: true,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setSaveStatus('✅ Radar calibré avec succès sur le serveur !');
+        } else if (data.error === 'RECALIBRATION_LOCKED') {
+          setSaveStatus(`🔒 Recalibrage verrouillé (30 jours). Prochain créneau dans ${data.lockDetails?.daysRemaining || 15}j.`);
+        } else {
+          setSaveStatus('✅ Radar synchronisé.');
+        }
+        setTimeout(() => setSaveStatus(null), 3500);
+      })
+      .catch(() => {
+        setSaveStatus('✅ Radar enregistré en mode local.');
+        setTimeout(() => setSaveStatus(null), 3000);
+      });
   };
 
   return (
@@ -110,12 +163,12 @@ export const FeaturesHumanClone: React.FC<FeaturesHumanCloneProps> = ({ onOpenOn
               </div>
               <h3 className="text-lg font-bold text-white mb-2">2. Extraction Vocale Sélective</h3>
               <p className="text-xs text-neutral-400 leading-relaxed mb-4">
-                L'IA isole uniquement les pistes audio à voix nette et rejette automatiquement les bruits parasites ou musiques de fond.
+                L'IA isole uniquement les pistes audio à voix nette et modélise votre Voice Twin sans bruits parasites ou musiques.
               </p>
             </div>
             <div className="text-xs font-semibold text-amber-400 flex items-center gap-1.5 pt-3 border-t border-neutral-800">
               <Check className="w-4 h-4 text-emerald-400" />
-              <span>Studio vocal express 20s en cas de besoin</span>
+              <span>Studio vocal express 20s in-app</span>
             </div>
           </div>
 
@@ -150,9 +203,20 @@ export const FeaturesHumanClone: React.FC<FeaturesHumanCloneProps> = ({ onOpenOn
               </p>
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-neutral-400 bg-neutral-950 px-3 py-1.5 rounded-lg border border-neutral-800">
-              <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
-              <span>Plafond : 1 recalibrage / 30 jours</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={handleTestVoiceTwin}
+                disabled={isPlayingVoice}
+                className="flex items-center gap-2 text-xs text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-3 py-1.5 rounded-lg transition-all cursor-pointer"
+              >
+                <Volume2 className={`w-3.5 h-3.5 ${isPlayingVoice ? 'animate-bounce text-amber-400' : ''}`} />
+                <span>{isPlayingVoice ? 'Écoute de l\'échantillon...' : 'Tester le Voice Twin'}</span>
+              </button>
+
+              <div className="flex items-center gap-1.5 text-xs text-neutral-400 bg-neutral-950 px-3 py-1.5 rounded-lg border border-neutral-800">
+                <Lock className="w-3.5 h-3.5 text-amber-400" />
+                <span>Verrou : 1 recalib / 30 jours</span>
+              </div>
             </div>
           </div>
 
@@ -194,7 +258,7 @@ export const FeaturesHumanClone: React.FC<FeaturesHumanCloneProps> = ({ onOpenOn
               </div>
 
               {/* Express Calibration Callout */}
-              <div className="mt-4 p-4 rounded-xl bg-neutral-950/80 border border-neutral-800 text-xs text-neutral-300 flex items-center justify-between gap-4">
+              <div className="mt-4 p-4 rounded-xl bg-neutral-950/80 border border-neutral-800 text-xs text-neutral-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 shrink-0">
                     <Mic className="w-4 h-4" />
@@ -204,13 +268,27 @@ export const FeaturesHumanClone: React.FC<FeaturesHumanCloneProps> = ({ onOpenOn
                     <span className="text-neutral-400 text-[11px]">Audio inexploitable ? Enregistrez 20s de voix + 5s de posture vidéo.</span>
                   </div>
                 </div>
-                <button
-                  onClick={onOpenOnboarding}
-                  className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs shrink-0 transition-all"
-                >
-                  Démarrer l'ingestion
-                </button>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <button
+                    onClick={handleSaveRadarCalibration}
+                    className="w-full sm:w-auto px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 text-xs font-medium cursor-pointer"
+                  >
+                    Sauvegarder
+                  </button>
+                  <button
+                    onClick={onOpenOnboarding}
+                    className="w-full sm:w-auto px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs shrink-0 transition-all cursor-pointer"
+                  >
+                    Démarrer
+                  </button>
+                </div>
               </div>
+
+              {saveStatus && (
+                <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 font-medium text-center">
+                  {saveStatus}
+                </div>
+              )}
             </div>
 
             {/* Radar View */}

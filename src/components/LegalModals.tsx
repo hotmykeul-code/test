@@ -32,7 +32,7 @@ export const LegalModals: React.FC<LegalModalsProps> = ({ type, onClose }) => {
                 {type === 'notice' && 'Mentions Légales & Identification de l\'Éditeur'}
               </h3>
               <span className="text-xs text-neutral-400">
-                SocialClone AI V3.0 • Dernière mise à jour : Août 2026
+                SocialClone AI • Dernière mise à jour : Août 2026
               </span>
             </div>
           </div>

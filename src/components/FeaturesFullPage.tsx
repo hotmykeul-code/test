@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 import { 
   ArrowLeft, 
   Sparkles, 
@@ -6,16 +6,14 @@ import {
   Video, 
   MessageSquareText, 
   CalendarCheck2, 
-  ShieldCheck, 
   ArrowRight,
-  Zap
+  Fingerprint,
+  Clapperboard
 } from 'lucide-react';
 import { FeaturesHumanClone } from './FeaturesHumanClone';
 import { FeaturesStudio } from './FeaturesStudio';
 import { FeaturesCopilotDM } from './FeaturesCopilotDM';
 import { FeaturesScheduler } from './FeaturesScheduler';
-import { ComplianceSection } from './ComplianceSection';
-import { InteractiveSimulatorSandbox } from './InteractiveSimulatorSandbox';
 
 interface FeaturesFullPageProps {
   onBackToHome: () => void;
@@ -35,12 +33,10 @@ export const FeaturesFullPage: React.FC<FeaturesFullPageProps> = ({
   }, []);
 
   const featureNavigationItems = [
-    { label: 'Simulateur Interactif', id: 'simulateur-interactif', icon: Sparkles },
-    { label: 'Total Human Clone', id: 'human-clone', icon: UserCheck },
-    { label: 'Studio IA & Formats', id: 'studio-ia', icon: Video },
-    { label: 'Copilote DM & Vente', id: 'copilote-dm', icon: MessageSquareText },
+    { label: 'Total Human Clone', id: 'human-clone', icon: Fingerprint },
+    { label: 'Studio Vidéo & Formats', id: 'studio-ia', icon: Clapperboard },
+    { label: 'Copilote DM 24h', id: 'copilote-dm', icon: MessageSquareText },
     { label: 'Smart Scheduler', id: 'smart-scheduler', icon: CalendarCheck2 },
-    { label: 'Conformité & RGPD', id: 'conformite', icon: ShieldCheck },
   ];
 
   const scrollToAnchor = (id: string) => {
@@ -73,7 +69,7 @@ export const FeaturesFullPage: React.FC<FeaturesFullPageProps> = ({
             </button>
             <button
               onClick={onOpenOnboarding}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-neutral-950 text-xs font-bold transition-all shadow-sm cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl gold-gradient-btn text-xs font-bold transition-all shadow-sm cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Créer mon Clone</span>
@@ -85,18 +81,18 @@ export const FeaturesFullPage: React.FC<FeaturesFullPageProps> = ({
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs text-amber-400 font-semibold mb-4">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Catalogue Technologique Complet</span>
+            <span>Catalogue Technologique</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight font-display">
             Toutes les fonctionnalités en détail
           </h1>
           <p className="text-neutral-400 text-base sm:text-lg leading-relaxed">
-            Explorez l'ensemble des modules technologiques : du clonage photoréaliste à la modélisation vocale, en passant par le studio vidéo 9:16 et la conversion conversationnelle par DM.
+            Explorez l'ensemble des modules : du clonage photoréaliste et vocal au studio vidéo 9:16 avec Safe-Zones, au copilote DM officiel et au planificateur d'audience.
           </p>
         </div>
 
         {/* Quick Anchor Navigation Chips */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 p-3 rounded-2xl bg-neutral-900/80 border border-neutral-800/80 backdrop-blur-sm max-w-5xl mx-auto">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 p-3 rounded-2xl bg-neutral-900/80 border border-neutral-800/80 backdrop-blur-sm max-w-3xl mx-auto">
           {featureNavigationItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -115,9 +111,6 @@ export const FeaturesFullPage: React.FC<FeaturesFullPageProps> = ({
 
       {/* Feature Modules */}
       <div className="space-y-4">
-        {/* Interactive Live Sandbox Simulator */}
-        <InteractiveSimulatorSandbox onOpenOnboarding={onOpenOnboarding} />
-
         {/* Section 1: Total Human Clone */}
         <FeaturesHumanClone onOpenOnboarding={onOpenOnboarding} />
 
@@ -129,9 +122,6 @@ export const FeaturesFullPage: React.FC<FeaturesFullPageProps> = ({
 
         {/* Section 4: Smart Scheduler */}
         <FeaturesScheduler onOpenOnboarding={onOpenOnboarding} />
-
-        {/* Section 5: Conformité & C2PA */}
-        <ComplianceSection onOpenLegal={onOpenLegal} />
       </div>
 
       {/* Bottom CTA Block on Features Page */}
@@ -140,7 +130,7 @@ export const FeaturesFullPage: React.FC<FeaturesFullPageProps> = ({
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="max-w-2xl mx-auto space-y-4">
-            <h3 className="text-2xl sm:text-3xl font-bold text-white">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white font-display">
               Prêt à configurer votre clone personnalisé ?
             </h3>
             <p className="text-neutral-400 text-sm sm:text-base leading-relaxed">
@@ -149,7 +139,7 @@ export const FeaturesFullPage: React.FC<FeaturesFullPageProps> = ({
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 onClick={onOpenOnboarding}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-sm transition-all shadow-lg hover:shadow-amber-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl gold-gradient-btn text-sm font-bold shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                 id="features-bottom-onboard-btn"
               >
                 <Sparkles className="w-4 h-4" />

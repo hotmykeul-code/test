@@ -9,9 +9,10 @@ import {
 interface HeroProps {
   onOpenOnboarding: () => void;
   onNavigateToFeatures?: () => void;
+  onOpenLogin?: (mode?: 'login' | 'signup') => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenOnboarding, onNavigateToFeatures }) => {
+export const Hero: React.FC<HeroProps> = ({ onOpenOnboarding, onNavigateToFeatures, onOpenLogin }) => {
   return (
     <section className="relative pt-24 pb-12 lg:pt-28 lg:pb-16 overflow-hidden" id="hero-section">
       {/* Background ambient lighting */}
@@ -37,25 +38,28 @@ export const Hero: React.FC<HeroProps> = ({ onOpenOnboarding, onNavigateToFeatur
           <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               onClick={onOpenOnboarding}
-              className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-base transition-all shadow-lg hover:shadow-amber-500/25 flex items-center justify-center gap-2.5 cursor-pointer group"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl gold-gradient-btn text-base flex items-center justify-center gap-2.5 cursor-pointer group shadow-xl"
               id="hero-primary-cta"
             >
               <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform duration-200" />
-              <span>Créer mon Clone IA (Gratuitement et sans engagement)</span>
+              <span>Créer mon Clone IA</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
             </button>
-
-            {onNavigateToFeatures && (
-              <button
-                onClick={onNavigateToFeatures}
-                className="w-full sm:w-auto px-5 py-3.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-200 font-semibold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
-                id="hero-secondary-cta"
-              >
-                <Layers className="w-4 h-4 text-amber-400" />
-                <span>Découvrir toutes les fonctionnalités</span>
-              </button>
-            )}
           </div>
+
+          {/* Direct Login Link */}
+          {onOpenLogin && (
+            <p className="mt-3 text-xs text-neutral-400">
+              Déjà inscrit ?{' '}
+              <button
+                type="button"
+                onClick={() => onOpenLogin('login')}
+                className="text-amber-400 hover:text-amber-300 font-semibold underline cursor-pointer"
+              >
+                Se connecter (Google, Meta, TikTok)
+              </button>
+            </p>
+          )}
 
           {/* Micro-assurances */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-neutral-400 pt-4 border-t border-neutral-900 max-w-2xl mx-auto">

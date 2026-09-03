@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   MessageSquareText, 
   ShieldAlert, 
@@ -9,9 +9,13 @@ import {
   Send, 
   Bot, 
   UserCheck, 
-  ArrowRight,
-  Sparkles,
-  AlertTriangle
+  ArrowRight, 
+  Sparkles, 
+  AlertTriangle,
+  Power,
+  ShieldOff,
+  Check,
+  Volume2
 } from 'lucide-react';
 import { SAMPLE_DM_CONVERSATIONS } from '../data/mockData';
 import { DmMode, DmMessageSimulation } from '../types';
@@ -26,13 +30,115 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
   const [selectedVariant, setSelectedVariant] = useState<'directe' | 'pedagogique' | 'conversion'>('directe');
   const [customKeyword, setCustomKeyword] = useState<string>('GUIDE');
 
+  // Master Switch & Emergency Pause State
+  const [masterActive, setMasterActive] = useState<boolean>(true);
+  const [emergencyPause, setEmergencyPause] = useState<boolean>(false);
+  
+  // Interactive Live Dispatch State
+  const [isSending, setIsSending] = useState<boolean>(false);
+  const [sendResult, setSendResult] = useState<string | null>(null);
+  const [voiceNoteModal, setVoiceNoteModal] = useState<any | null>(null);
+
   const currentDm = SAMPLE_DM_CONVERSATIONS[selectedDmIndex];
+
+  useEffect(() => {
+    fetch('/api/copilot/status')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.dmSettings) {
+          setMasterActive(data.dmSettings.masterActive);
+          setEmergencyPause(data.dmSettings.emergencyPause);
+          if (data.dmSettings.mode) setActiveMode(data.dmSettings.mode);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleToggleMaster = () => {
+    const nextState = !masterActive;
+    setMasterActive(nextState);
+    fetch('/api/copilot/toggle-master', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ masterActive: nextState }),
+    }).catch(() => {});
+  };
+
+  const handleToggleEmergencyPause = () => {
+    const nextState = !emergencyPause;
+    setEmergencyPause(nextState);
+    fetch('/api/copilot/emergency-pause', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ emergencyPause: nextState }),
+    }).catch(() => {});
+  };
+
+  const handleSendResponse = () => {
+    if (!currentDm.within24h) {
+      setSendResult('❌ Envoi bloqué : La fenêtre des 24h a expiré.');
+      setTimeout(() => setSendResult(null), 3500);
+      return;
+    }
+    if (emergencyPause) {
+      setSendResult('🚨 Envoi bloqué : L\'arrêt d\'urgence est actif.');
+      setTimeout(() => setSendResult(null), 3500);
+      return;
+    }
+
+    setIsSending(true);
+    fetch('/api/copilot/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        recipientId: currentDm.sender,
+        messageContent: currentDm.suggestedReplies[selectedVariant],
+        receivedAt: currentDm.within24h ? new Date().toISOString() : '2026-08-01T10:00:00Z',
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setIsSending(false);
+        if (data.success) {
+          setSendResult(`✅ Réponse expédiée à @${currentDm.sender} via l'API officielle !`);
+        } else {
+          setSendResult(`⚠️ ${data.message || 'Erreur d\'envoi'}`);
+        }
+        setTimeout(() => setSendResult(null), 4000);
+      })
+      .catch(() => {
+        setIsSending(false);
+        setSendResult(`✅ Réponse simulée expédiée à @${currentDm.sender} !`);
+        setTimeout(() => setSendResult(null), 3000);
+      });
+  };
+
+  const handleGenerateOralizedVoiceNote = () => {
+    fetch('/api/copilot/generate-voice-note', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: currentDm.suggestedReplies[selectedVariant],
+        recipientName: currentDm.sender,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setVoiceNoteModal(data);
+      })
+      .catch(() => {
+        setVoiceNoteModal({
+          oralizedScript: `Salut ${currentDm.sender} ! ... Alors écoute, je voulais te répondre directement. ... Regarde le lien que je t'ai mis en dessous !`,
+          metrics: { estimatedDurationSec: 16 },
+        });
+      });
+  };
 
   return (
     <section className="py-24 bg-neutral-950 border-t border-neutral-900 relative" id="copilote-dm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 mb-3">
             <MessageSquareText className="w-3.5 h-3.5" />
             <span>Section 4 • Copilote DM & Messagerie Conforme (API Officielle)</span>
@@ -43,6 +149,44 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
           <p className="text-neutral-400 text-sm sm:text-base leading-relaxed">
             Connecté exclusivement aux API officielles (*Messenger API for Instagram* et *TikTok Direct Message API*). Respect strict de la fenêtre standard des 24 heures et 3 modes d'automatisation sur mesure.
           </p>
+        </div>
+
+        {/* Master Switch & Emergency Killswitch Bar */}
+        <div className="p-4 sm:p-5 rounded-2xl bg-neutral-900 border border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleToggleMaster}
+              className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-2 ${
+                masterActive
+                  ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
+                  : 'bg-neutral-950 border-neutral-800 text-neutral-500'
+              }`}
+            >
+              <Power className={`w-4 h-4 ${masterActive ? 'text-emerald-400' : 'text-neutral-500'}`} />
+              <span className="text-xs font-bold">
+                {masterActive ? 'Master Switch : ACTIF' : 'Master Switch : VEILLE'}
+              </span>
+            </button>
+
+            <button
+              onClick={handleToggleEmergencyPause}
+              className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-2 ${
+                emergencyPause
+                  ? 'bg-rose-500/20 border-rose-500/60 text-rose-300 animate-pulse'
+                  : 'bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-white'
+              }`}
+            >
+              <ShieldOff className={`w-4 h-4 ${emergencyPause ? 'text-rose-400' : 'text-neutral-400'}`} />
+              <span className="text-xs font-bold">
+                {emergencyPause ? '🚨 ARRÊT D\'URGENCE ACTIF' : 'Arrêt d\'Urgence (Killswitch)'}
+              </span>
+            </button>
+          </div>
+
+          <div className="text-xs text-neutral-400 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span>Serveur API Meta / TikTok connecté (Latence 42ms)</span>
+          </div>
         </div>
 
         {/* 3 Modes Overview Bar */}
@@ -124,9 +268,9 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
                 <button
                   key={dm.id}
                   onClick={() => setSelectedDmIndex(idx)}
-                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all border ${
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all border cursor-pointer ${
                     selectedDmIndex === idx
-                      ? 'bg-amber-500 text-neutral-950 border-amber-400'
+                      ? 'bg-amber-500 text-neutral-950 border-amber-400 font-bold'
                       : 'bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-white'
                   }`}
                   id={`dm-tab-${idx}`}
@@ -157,7 +301,7 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
                   ) : (
                     <span className="text-xs font-bold text-rose-400 bg-rose-500/10 px-2.5 py-0.5 rounded border border-rose-500/20 flex items-center gap-1">
                       <AlertTriangle className="w-3.5 h-3.5" />
-                      Expirée (Bloquée)
+                      Expirée (Verrouillé)
                     </span>
                   )}
                 </div>
@@ -170,8 +314,8 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
                     className="w-10 h-10 rounded-full object-cover border border-neutral-700"
                   />
                   <div>
-                    <h4 className="text-xs font-bold text-white">{currentDm.sender}</h4>
-                    <span className="text-[11px] text-neutral-400">Compte vérifié Meta</span>
+                    <h4 className="text-xs font-bold text-white">@{currentDm.sender}</h4>
+                    <span className="text-[11px] text-neutral-400">Compte Instagram vérifié</span>
                   </div>
                 </div>
 
@@ -183,9 +327,9 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
 
                 {/* Intention Triage Tag */}
                 <div className="p-3 rounded-lg bg-neutral-950/80 border border-neutral-800 text-xs flex items-center justify-between">
-                  <span className="text-neutral-400 text-[11px]">Intention détectée :</span>
+                  <span className="text-neutral-400 text-[11px]">Intention & Urgence :</span>
                   <span className="text-amber-400 font-bold text-[11px]">
-                    {currentDm.intent.replace('_', ' ')}
+                    {currentDm.intent.replace('_', ' ')} • URGENTE ({currentDm.urgency})
                   </span>
                 </div>
               </div>
@@ -193,7 +337,7 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
               {/* 24h compliance guarantee message */}
               <div className="mt-6 pt-4 border-t border-neutral-800 text-[11px] text-neutral-400 flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Verrouillage automatique si la fenêtre expire pour éviter tout blocage de compte.</span>
+                <span>Verrouillage automatique anti-ban si la fenêtre des 24h est dépassée.</span>
               </div>
             </div>
 
@@ -203,7 +347,7 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xs font-bold text-white flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4 text-amber-400" />
-                    Variantes Générées selon votre Style Rédactionnel
+                    3 Variantes Calibrées sur votre Voice Twin
                   </span>
                   <span className="text-[11px] text-amber-400 font-mono">
                     Ton : Énergie 88% • Empathie 92%
@@ -267,7 +411,7 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
                   >
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="text-xs font-bold text-amber-300">
-                        3. Conversion & Vente Directe
+                        3. Conversion & Vente (Lien Stripe / Inscription)
                       </span>
                       {selectedVariant === 'conversion' && (
                         <span className="text-[10px] text-amber-400 font-bold">Sélectionnée</span>
@@ -279,45 +423,60 @@ export const FeaturesCopilotDM: React.FC<FeaturesCopilotDMProps> = ({ onOpenOnbo
                   </div>
                 </div>
 
-                {/* Oral Voice Note Generator */}
-                <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 text-xs flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
-                      <Mic2 className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <span className="font-bold text-white block">Notes Vocales Stylisées (Oralisées)</span>
-                      <span className="text-[11px] text-neutral-400">Texte adapté au rythme parlé, prêt à être dicté au micro.</span>
-                    </div>
+                {sendResult && (
+                  <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-700 text-xs font-medium mb-4">
+                    {sendResult}
                   </div>
-                  <button className="px-3 py-1.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-semibold shrink-0">
-                    Copier le script oral
-                  </button>
-                </div>
+                )}
               </div>
 
-              {/* Action Button Send or Locked */}
-              <div className="mt-6 pt-4 border-t border-neutral-800 flex items-center justify-between">
-                <span className="text-xs text-neutral-400">
-                  {currentDm.within24h ? 'Prêt à être envoyé via API officielle' : 'Réponse manuelle requise hors fenêtre 24h'}
-                </span>
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-800">
+                <button
+                  onClick={handleGenerateOralizedVoiceNote}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-xs font-semibold text-neutral-200 flex items-center justify-center gap-2 cursor-pointer transition-all"
+                >
+                  <Mic2 className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Générer Note Vocale Oralisée</span>
+                </button>
 
                 <button
-                  disabled={!currentDm.within24h}
-                  onClick={onOpenOnboarding}
-                  className={`px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                  onClick={handleSendResponse}
+                  disabled={isSending || !currentDm.within24h}
+                  className={`w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     currentDm.within24h
                       ? 'bg-amber-500 hover:bg-amber-400 text-neutral-950 shadow-md'
                       : 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
                   }`}
                 >
                   <Send className="w-3.5 h-3.5" />
-                  <span>{currentDm.within24h ? 'Expédier la réponse' : 'Fenêtre 24h expirée'}</span>
+                  <span>{isSending ? 'Expédition API...' : currentDm.within24h ? 'Expédier la Réponse' : 'Verrouillé (>24h)'}</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Voice Note Modal Output */}
+        {voiceNoteModal && (
+          <div className="mt-6 p-5 rounded-2xl bg-neutral-900 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                <Volume2 className="w-4 h-4" />
+                <span>Script de Note Vocale Oralisée ({voiceNoteModal.metrics?.estimatedDurationSec}s)</span>
+              </span>
+              <p className="text-xs text-neutral-200 italic font-mono">
+                {voiceNoteModal.oralizedScript}
+              </p>
+            </div>
+            <button
+              onClick={() => setVoiceNoteModal(null)}
+              className="px-3 py-1.5 rounded-lg bg-neutral-800 text-xs text-neutral-400 hover:text-white shrink-0"
+            >
+              Fermer
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

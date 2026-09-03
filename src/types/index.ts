@@ -55,4 +55,73 @@ export interface CarouselSlide {
   content: string;
   visualNote: string;
   ctaText?: string;
+  headline?: string;
+  slideNumber?: number;
+}
+
+export interface ScheduledPost {
+  id: string;
+  platform: 'INSTAGRAM' | 'TIKTOK' | 'YOUTUBE' | 'THREADS' | 'LINKEDIN' | 'X';
+  mediaUrl: string;
+  caption: string;
+  scheduledAt: string;
+  status: 'SCHEDULED' | 'PUBLISHED' | 'LEVEL_2_FALLBACK' | 'FAILED' | 'DRAFT';
+  resilienceTier: 1 | 2;
+  predictedEngagementScore: number;
+  bestTimeSlot?: string;
+}
+
+export interface BatchIdea {
+  id: string;
+  angle: string;
+  title: string;
+  score: number;
+  format: string;
+  hook: string;
+  coreValue?: string;
+  ctaAction?: string;
+}
+
+export interface AdScriptSection {
+  timeframe: string;
+  visual: string;
+  audioVoice: string;
+}
+
+export interface AdScript {
+  id: string;
+  title: string;
+  targetPlatform: string;
+  objective: string;
+  hookSeconds: string;
+  estimatedCpa: string;
+  scriptSections: {
+    hook: AdScriptSection;
+    problem: AdScriptSection;
+    solution: AdScriptSection;
+    cta: AdScriptSection;
+  };
+}
+
+export interface EmailFunnelStage {
+  stage: string;
+  trigger: string;
+  subject: string;
+  previewText: string;
+  objective: string;
+  ctaUrl: string;
+}
+
+export interface AffiliateDashboardData {
+  code: string;
+  referralLink: string;
+  commissionRate: string;
+  bonusOnboarding: string;
+  totalClicks: number;
+  referralCount: number;
+  activeSubscribers: number;
+  monthlyRecurringCommissionEur: number;
+  totalPaidOutEur: number;
+  nextPayoutDate: string;
+  payoutThresholdEur: number;
 }

@@ -913,8 +913,15 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 </span>
                 <button
                   type="button"
-                  onClick={() => setStep('COMPLETE')}
-                  className="px-6 py-3 rounded-xl bg-white hover:bg-neutral-200 text-black font-medium text-[13px] flex items-center gap-2 transition-colors"
+                  onClick={() => {
+                    setStep('COMPLETE');
+                    fetch('/api/clone/onboarding-bonus', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ userId: connectedProfile?.handle || '@creator' }),
+                    }).catch(() => {});
+                  }}
+                  className="px-6 py-3 rounded-xl bg-white hover:bg-neutral-200 text-black font-medium text-[13px] flex items-center gap-2 transition-colors cursor-pointer"
                 >
                   Générer le Jumeau
                   <ArrowRight className="w-4 h-4" />
@@ -926,25 +933,29 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           {/* STEP 5: Complete */}
           {step === 'COMPLETE' && (
             <div className="py-10 text-center space-y-6 animate-in fade-in zoom-in-95 duration-500">
-              <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 mx-auto flex items-center justify-center">
-                <Check className="w-7 h-7 text-white" />
+              <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 mx-auto flex items-center justify-center">
+                <Check className="w-7 h-7 text-amber-400" />
               </div>
 
               <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold mb-2">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>🎁 +50 Crédits Vidéo Débloqués !</span>
+                </div>
                 <h4 className="text-xl font-medium text-neutral-100">
-                  Jumeau Opérationnel
+                  Jumeau Opérationnel & Calibré
                 </h4>
                 <p className="text-[13px] text-neutral-400 max-w-sm mx-auto">
-                  Votre modèle d'intelligence artificielle est maintenant configuré et prêt à générer du contenu.
+                  Votre modèle d'intelligence artificielle est maintenant synchronisé sur vos 8 axes et votre solde a été crédité avec succès.
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={onClose}
-                className="mt-6 w-full max-w-[280px] mx-auto py-3.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-medium text-[14px] transition-colors flex items-center justify-center gap-2"
+                className="mt-6 w-full max-w-[280px] mx-auto py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-[14px] transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-lg"
               >
-                Ouvrir le Studio
+                Ouvrir le Studio IA
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>

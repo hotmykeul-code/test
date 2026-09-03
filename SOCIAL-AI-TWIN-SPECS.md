@@ -15,6 +15,7 @@ Document maître consolidé de référence technique, produit, architecture et l
 8. [Schéma de Base de Données (Prisma PostgreSQL)](#8-schéma-de-base-de-données-prisma-postgresql)
 9. [Conformité Juridique, RGPD & Traçabilité C2PA](#9-conformité-juridique-rgpd--traçabilité-c2pa)
 10. [Variables d'Environnement (.env.example)](#10-variables-denvironnement-envexample)
+11. [Stratégie Marketing, SEO, Publicité & Croissance Virale](#11-stratégie-marketing-seo-publicité--croissance-virale)
 
 ---
 
@@ -41,34 +42,45 @@ L'interface utilisateur, les notifications et les invites IA bannissent tout jar
 
 ## 2. ONBOARDING, CONSENTEMENT & TOTAL HUMAN CLONE
 
-### 2.1. Étape Obligatoire de Consentement Biométrique & Légal
-Avant toute synchronisation de compte social (OAuth) ou activation de flux média, l'utilisateur doit obligatoirement valider deux consentements explicites (actions bloquées sans validation) :
-1. **Case à cocher 1 (CGU & Confidentialité)** : « J'accepte les Conditions Générales d'Utilisation (CGU) et la Politique de Confidentialité. »
-2. **Case à cocher 2 (Données Biométriques & Droit à l'Image)** : « J'autorise expressément SocialClone AI à analyser et traiter mes traits faciaux, ma silhouette et ma voix dans le but exclusif de générer mon clone numérique personnel. Je certifie être le titulaire légitime du compte connecté et/ou des médias fournis. »
+Le parcours d'onboarding de l'utilisateur (Écran 1) est articulé autour d'un tunnel séquentiel fluide et conforme en 7 étapes clés :
 
-### 2.2. Ingestion Multimodale Automatique (OAuth 1-Clic)
-Dès la première connexion d'un compte Instagram ou TikTok :
-- **Ingestion Textuelle** : Analyse des 20 à 30 dernières légendes/descriptions de posts :
-  - Calibrage du **Radar Stylistique à 8 Axes (0 à 100)** : Humour & Dérision, Formalisme, Énergie & Punch, Empathie, Storytelling, Technicité, Provocation & Clivage, Rythme & Concision.
-  - Détection de l'**Archétype Dominant** (Mentor, Vulgarisateur, Rebelle, Leader, Expert, Storyteller).
-  - Extraction du vocabulaire signature, des expressions récurrentes et des 5 emojis fétiches.
-- **Extraction Vocale Sélective & Débruitée** :
-  - L'IA filtre les vidéos et **n'extrait l'audio que si la voix est nette et isolée** (rejet automatique des vidéos contenant des musiques de fond ou du bruit parasite).
-  - Récupération optionnelle des notes vocales non compressées envoyées par le créateur dans ses DMs.
-- **Extraction Visuelle Légère (Keyframes)** :
-  - Extraction automatique de **3 à 5 images clés haute résolution** (visage net, buste, silhouette complète et style vestimentaire habituel).
+### 2.1. Étape 1 — Inscription OAuth Multicanaux
+L'utilisateur crée son compte principal via les fournisseurs d'identité sécurisés :
+- **Google Sign-In** (Web & Mobile).
+- **Apple Sign-In** (iOS & Web).
+- **Meta (Facebook / Instagram Auth)**.
+- **TikTok Login Kit**.
 
-### 2.3. Studio de Calibrage Guidé Express (Mobile & Web)
-Si le compte connecté possède peu de contenus ou un audio inexploitable :
-- **Calibrage Vocal Express** : Lecture guidée d'un texte court de 20 secondes via le microphone natif.
-- **Calibrage Corporel Complet** : Enregistrement vidéo de 5 à 10 secondes montrant le créateur de la tête aux pieds dans sa posture et sa tenue favorite.
+### 2.2. Étape 2 — Étape Obligatoire de Consentement Biométrique & Légal (RGPD)
+Avant toute synchronisation de compte ou traitement de média, validation obligatoire de deux consentements explicites :
+1. **Case 1 (CGU & Confidentialité)** : *« J'accepte les Conditions Générales d'Utilisation (CGU) et la Politique de Confidentialité. »*
+2. **Case 2 (Données Biométriques & Droit à l'Image)** : *« J'autorise expressément SocialClone AI à analyser et traiter mes traits faciaux, ma silhouette et ma voix dans le but exclusif de générer mon clone numérique personnel. Je certifie être le titulaire légitime du compte connecté et/ou des médias fournis. »*
 
-### 2.4. Avatar Photoréaliste Sublimé & Recalibrage
-- **Moteur d'Embellissement Naturel ("Subtle Beauty Enhancement")** : Lissage doux du grain de peau, éclairage studio flatteur, éclat du regard et colorimétrie soignée.
-- **Format Technique du Clone Animé** :
-  - Format principal : **WebM / MP4 H.265 en boucle fluide 60 fps (< 1.5 Mo)**.
-  - Format export/fallback : **GIF HD optimisé**.
-- **Cycle de Recalibrage** : Plafonné à **1 recalibrage tous les 30 jours** par compte pour refléter l'évolution physique ou vestimentaire du créateur.
+### 2.3. Étape 3 — Synchronisation OAuth du Compte Social (Instagram ou TikTok)
+Connexion en 1 clic du compte créateur ou professionnel à cloner via les API officielles (*Instagram Basic Display / Graph API* ou *TikTok Creator API*).
+
+### 2.4. Étape 4 — Analyse Multimodale Approfondie du Profil
+Dès la synchronisation réussie, le moteur IA ingère et traite les données publiques et autorisées :
+- **Analyse des Posts & DMs** : Évaluation des 20 à 30 dernières légendes et des échanges DMs pour extraire le vocabulaire signature, les emojis fétiches et structurer le **Radar Stylistique à 8 Axes**.
+- **Extraction Vocale Débruitée** : Isolation des pistes audio où la voix du créateur est nette pour modéliser le **Voice Twin**.
+- **Extraction Visuelle & Keyframes** : Sélection automatique des 3 à 5 meilleures images clés (visage net, posture, style vestimentaire habituel).
+- **Studio de Calibrage Guidé Express (Fallback)** : Si le compte manque de matière, enregistrement express in-app (audio 20s + vidéo 10s).
+
+### 2.5. Étape 5 — Validation du Clone, de la Voix et du Style
+Présentation interactive du clone généré :
+- **Écoute du Voice Twin** : Test d'échantillon audio généré avec la voix clonée.
+- **Aperçu de l'Avatar Photoréaliste Sublimé** : Rendu dynamique avec option *Subtle Beauty Enhancement* activable.
+- **Ajustement du Radar Stylistique** : Réglage fin des curseurs (Humour, Énergie, Empathie, Formalisme, etc.).
+
+### 2.6. Étape 6 — Proposition Virale : Génération du Clip Promotionnel (+50 Crédits)
+Proposition d'un boost de démarrage immédiat :
+- Message : *« 🎁 Générez et postez votre première vidéo officielle "Mon clone IA est en ligne" pour débloquer immédiatement 50 crédits vidéo offerts ! »*
+- Choix utilisateur : Accepter (*Générer & Publier*) ou Passer (*Continuer vers le Studio*).
+
+### 2.7. Étape 7 — Publication Automatique & Confirmation d'Inscription
+- **En cas de validation** : L'IA génère la vidéo 9:16 avec l'avatar et les sous-titres, la publie automatiquement sur le compte Instagram ou TikTok synchronisé via l'API officielle, et crédite instantanément les **50 crédits offerts**.
+- **Envoi de Confirmation** : Envoi immédiat d'un email transactionnel et/ou d'une notification in-app confirmant l'inscription, le succès du clonage et le solde de crédits disponible.
+- Redirection directe vers le tableau de bord principal.
 
 ---
 
@@ -115,12 +127,18 @@ Chaque message entrant est analysé en temps réel pour déterminer :
 - L'intention : Prospect qualifié, Question technique, Collaboration / Partenariat, Remerciement, Réclamation.
 - Le niveau d'urgence et le sentiment associé.
 
-### 4.3. Les 3 Modes d'Automatisation Configurables
+### 4.3. Interrupteur Général & Contrôle d'Activation du Bot (Master Toggle ON/OFF)
+L'encart latéral droit du Copilote IA intègre un panneau de contrôle en tête d'interface :
+- **Interrupteur Général (Bot Status : ACTIVE / INACTIVE)** : Commutateur visuel lumineux permettant d'activer ou de désactiver instantanément l'assistance et les réponses IA pour le compte ou la conversation en cours.
+- **Bouton d'Arrêt d'Urgence (*Emergency Pause*)** : Permet de suspendre en 1 clic toutes les files d'attente d'envois automatiques et de basculer en mode manuel exclusif.
+- **Sélecteur de Mode en 1-Clic** : Bascule immédiate entre les 3 modes (*100% Auto*, *Semi-Auto*, *Hybride*).
+
+### 4.4. Les 3 Modes d'Automatisation Configurables
 1. **Mode Automatique (100 % Auto)** : L'IA répond immédiatement aux messages entrants selon le Voice Twin calibré, sans validation manuelle préalable.
 2. **Mode Semi-Automatique (Copilote)** : L'IA prépare 3 variantes de réponses (*Directe & Chaleureuse*, *Pédagogique & Complète*, *Conversion & Vente*). Le créateur ou son Community Manager clique sur la variante choisie pour l'expédier instantanément.
 3. **Mode Hybride** : Traitement 100 % automatique immédiat sur les mots-clés configurés (ex. "GUIDE", "PRIX", "PROMO", "LIEN"), et mise en attente copilote pour toutes les autres requêtes complexes.
 
-### 4.4. Notes Vocales Stylisées (Texte Oralisé)
+### 4.5. Notes Vocales Stylisées (Texte Oralisé)
 Génération de scripts de réponses formulés pour l'oral (rythme parlé, phrases courtes et dynamiques), prêts à être dictés ou enregistrés directement par le créateur.
 
 ---
@@ -436,3 +454,37 @@ INSTAGRAM_CLIENT_SECRET="xxxxxx"
 TIKTOK_CLIENT_KEY="xxxxxx"
 TIKTOK_CLIENT_SECRET="xxxxxx"
 ```
+
+---
+
+## 11. STRATÉGIE MARKETING, SEO, PUBLICITÉ & CROISSANCE VIRALE
+
+### 11.1. Piliers SEO & Stratégie de Contenu Programmatique
+1. **Clusters Thématiques à Forte Intention** :
+   - *Cluster 1 (Clonage & Identité IA)* : « clone IA créateur », « cloner sa voix et son visage », « avatar photoréaliste TikTok / Reels ».
+   - *Cluster 2 (Automatisation & Productivité)* : « répondeur automatique DM Instagram », « planificateur IA TikTok », « safe zone vidéo short / reels ».
+   - *Cluster 3 (Monétisation & Conversion)* : « tunnel de vente DM Instagram », « convertir abonnés en clients DM », « copilote messagerie créateur ».
+2. **Architecture Technique & Données Structurées (Schema.org)** :
+   - Balisage `SoftwareApplication` et `FAQPage` sur toutes les pages publiques d'outils et de templates.
+   - Génération dynamique des balises OpenGraph et Twitter Cards avec prévisualisation personnalisée du clone créateur.
+   - Sitemap XML dynamique généré automatiquement pour les templates de posts et études de cas.
+
+### 11.2. Playbook Publicitaire & Acquisition Payante (Ads)
+- **Campagnes Meta Ads & TikTok Ads (Formats 9:16 Verticaux)** :
+  - *Angle 1 (Gain de Temps / Anti-Burnout)* : « Passez de 15h de tournage par semaine à 1 clic grâce à votre clone IA. »
+  - *Angle 2 (Preuve de Réalisme / Side-by-Side)* : Démonstration visuelle côte à côte entre le créateur réel et son avatar animé avec lip-sync parfait.
+  - *Angle 3 (Conversion DM)* : « Comment convertir 100% de vos commentaires 'INFO' en ventes en pilote automatique sous 60 secondes. »
+- **Campagnes Google Search (Mots-Clés Transactionnels)** :
+  - Ciblage d'expressions à haute intention d'achat : *« outil création contenu IA »*, *« automatisation DM Instagram prix »*, *« logiciel clone avatar vidéo »*.
+
+### 11.3. Boucles de Viralité & Programme Partenaires / Affiliation
+1. **Marquage Subtil (« Made with SocialClone AI »)** :
+   - Présent par défaut sur les contenus générés en formule gratuite (supprimé automatiquement sur les comptes Pro & Agence).
+   - Lien cliquable dans la bio ou tag automatique redirigeant vers la page d'inscription avec tracking de parrainage.
+2. **Programme d'Affiliation Créateurs & Agences** :
+   - 30 % de commission récurrente à vie sur tous les abonnements apportés.
+   - Attribution de 50 crédits vidéo offerts pour le parrain et le filleul dès l'activation du compte.
+3. **Tunnel d'Acquisition B2B (Agences & Gestionnaires de Comptes)** :
+   - Audit gratuit de régularité et de tonalité de compte social (Lead Magnet interactif).
+   - Démonstration sur mesure avec clonage instantané du compte de l'agence.
+

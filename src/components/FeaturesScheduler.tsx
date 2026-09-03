@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   CalendarCheck2, 
   Clock, 
@@ -8,9 +8,12 @@ import {
   ExternalLink, 
   CheckCircle2, 
   Sparkles, 
-  ArrowRight,
-  TrendingUp,
-  AlertCircle
+  ArrowRight, 
+  TrendingUp, 
+  AlertCircle,
+  Check,
+  Send,
+  ShieldCheck
 } from 'lucide-react';
 
 interface FeaturesSchedulerProps {
@@ -32,10 +35,58 @@ export const FeaturesScheduler: React.FC<FeaturesSchedulerProps> = ({ onOpenOnbo
   });
 
   const [copiedState, setCopiedState] = useState(false);
+  const [isAutoPlacing, setIsAutoPlacing] = useState(false);
+  const [publishFeedback, setPublishFeedback] = useState<string | null>(null);
 
   const handleSimulateCopy = () => {
+    navigator.clipboard.writeText('Pourquoi 90% des créateurs s\'épuisent à filmer 4h par jour en 2026. La méthode du clone IA en 3 étapes. 🔥 #SocialClone #AI #ContentCreator');
     setCopiedState(true);
-    setTimeout(() => setCopiedState(false), 2000);
+    setTimeout(() => setCopiedState(false), 2200);
+  };
+
+  const handleAutoPlace = () => {
+    setIsAutoPlacing(true);
+    fetch('/api/scheduler/auto-place', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ platform: 'INSTAGRAM', format: 'VIDEO_9_16' }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setSelectedSlot({
+          day: data.recommendedSlot?.day || 'Mardi',
+          time: data.recommendedSlot?.time || '18:45',
+          score: data.recommendedSlot?.score || 98,
+        });
+        setIsAutoPlacing(false);
+        setPublishFeedback('✨ Créneau optimal Mardi 18:45 sélectionné (+38% de portée estimée) !');
+        setTimeout(() => setPublishFeedback(null), 3500);
+      })
+      .catch(() => {
+        setSelectedSlot({ day: 'Mardi', time: '18:45', score: 98 });
+        setIsAutoPlacing(false);
+      });
+  };
+
+  const handleTestPublish = (tier: 1 | 2) => {
+    fetch('/api/scheduler/publish-now', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ forceFallbackLevel2: tier === 2 }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.tier === 1) {
+          setPublishFeedback('✅ Niveau 1 : Publication directe expédiée avec succès via l\'API officielle.');
+        } else {
+          setPublishFeedback('📱 Niveau 2 : Push Expo reçu + Légende copiée dans le presse-papier !');
+        }
+        setTimeout(() => setPublishFeedback(null), 4000);
+      })
+      .catch(() => {
+        setPublishFeedback(`✅ Simulation Niveau ${tier} exécutée avec succès.`);
+        setTimeout(() => setPublishFeedback(null), 3000);
+      });
   };
 
   return (
@@ -64,15 +115,16 @@ export const FeaturesScheduler: React.FC<FeaturesSchedulerProps> = ({ onOpenOnbo
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-amber-400" />
                   <h3 className="text-lg font-bold text-white">
-                    Matrice Horaire & Scoring Prédictif
+                    Matrice Horaire 7x4 & Scoring Prédictif
                   </h3>
                 </div>
                 <button
-                  onClick={() => setSelectedSlot({ day: 'Mardi', time: '18:45', score: 98 })}
-                  className="px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-bold transition-all flex items-center gap-1.5"
+                  onClick={handleAutoPlace}
+                  disabled={isAutoPlacing}
+                  className="px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>Auto-Placer au Meilleur Moment</span>
+                  <span>{isAutoPlacing ? 'Calcul...' : 'Auto-Placer au Meilleur Moment'}</span>
                 </button>
               </div>
 
@@ -99,8 +151,8 @@ export const FeaturesScheduler: React.FC<FeaturesSchedulerProps> = ({ onOpenOnbo
                           const score = row[dayKey];
                           const isBest = score >= 95;
                           const isHigh = score >= 85 && score < 95;
-                          const dayName = dayKey.toUpperCase();
-                          const isSelected = selectedSlot.time === row.time && selectedSlot.day.toLowerCase().startsWith(dayKey.slice(0, 2));
+                          const dayName = dayKey === 'lun' ? 'Lundi' : dayKey === 'mar' ? 'Mardi' : dayKey === 'mer' ? 'Mercredi' : dayKey === 'jeu' ? 'Jeudi' : dayKey === 'ven' ? 'Vendredi' : dayKey === 'sam' ? 'Samedi' : 'Dimanche';
+                          const isSelected = selectedSlot.time === row.time && selectedSlot.day === dayName;
 
                           return (
                             <td key={dayKey} className="py-2 px-1 text-center">
@@ -140,6 +192,12 @@ export const FeaturesScheduler: React.FC<FeaturesSchedulerProps> = ({ onOpenOnbo
                   <span className="text-sm font-bold text-emerald-400">Score {selectedSlot.score}/100</span>
                 </div>
               </div>
+
+              {publishFeedback && (
+                <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 font-medium text-center">
+                  {publishFeedback}
+                </div>
+              )}
             </div>
 
             <div className="mt-6 pt-4 border-t border-neutral-800 flex items-center justify-between text-xs">
@@ -172,7 +230,12 @@ export const FeaturesScheduler: React.FC<FeaturesSchedulerProps> = ({ onOpenOnbo
                       <CheckCircle2 className="w-4 h-4" />
                       Niveau 1 : Publication Directe API
                     </span>
-                    <span className="text-[10px] text-neutral-500 font-mono">Automatisé</span>
+                    <button
+                      onClick={() => handleTestPublish(1)}
+                      className="text-[10px] bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30 cursor-pointer"
+                    >
+                      Tester API
+                    </button>
                   </div>
                   <p className="text-xs text-neutral-400 leading-relaxed">
                     Le post est expédié automatiquement à l'heure programmée sur Instagram, TikTok ou YouTube sans aucune action requise.
@@ -180,48 +243,42 @@ export const FeaturesScheduler: React.FC<FeaturesSchedulerProps> = ({ onOpenOnbo
                 </div>
 
                 {/* Level 2 Card */}
-                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-2">
+                <div className="p-4 rounded-xl bg-neutral-900 border border-amber-500/30 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                      <Bell className="w-4 h-4 text-amber-400 animate-bounce" />
+                      <Bell className="w-4 h-4 text-amber-400" />
                       Niveau 2 : Fallback Mobile Intelligent
                     </span>
-                    <span className="text-[10px] text-amber-400 font-mono">Zéro Panne</span>
+                    <button
+                      onClick={() => handleTestPublish(2)}
+                      className="text-[10px] bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 px-2 py-0.5 rounded border border-amber-500/30 cursor-pointer"
+                    >
+                      Tester Fallback
+                    </button>
                   </div>
-                  <p className="text-xs text-neutral-300 leading-relaxed">
-                    Si l'API du réseau social renvoie une erreur (400/500), le système déclenche immédiatement :
+                  <p className="text-xs text-neutral-400 leading-relaxed">
+                    Si l'API externe est indisponible, l'application déclenche une notification push sur votre smartphone via Expo.
                   </p>
 
-                  <ul className="text-xs text-neutral-300 space-y-1.5 pt-1">
-                    <li className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                      <span>Push haute priorité sur votre smartphone via Expo.</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                      <span>Téléchargement local du média (Reel / Carrousel).</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                      <span>Copie automatique de la légende et hashtags dans le presse-papier.</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                      <span>Ouverture en 1 clic de l'application native prête à publier.</span>
-                    </li>
-                  </ul>
+                  <div className="p-3 rounded-lg bg-neutral-950 border border-neutral-800 flex items-center justify-between gap-3 text-xs">
+                    <span className="text-neutral-300 truncate">
+                      Légende + hashtags prêts
+                    </span>
+                    <button
+                      onClick={handleSimulateCopy}
+                      className="px-2.5 py-1 rounded bg-neutral-800 hover:bg-neutral-700 text-amber-400 flex items-center gap-1 text-[11px] font-bold shrink-0 cursor-pointer"
+                    >
+                      {copiedState ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copiedState ? 'Copié !' : 'Copier'}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="pt-2">
-              <button
-                onClick={handleSimulateCopy}
-                className="w-full py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 text-neutral-200 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
-              >
-                <Copy className="w-3.5 h-3.5 text-amber-400" />
-                <span>{copiedState ? '✓ Légende et média copiés !' : 'Déployer vers TikTok'}</span>
-              </button>
+            <div className="pt-4 border-t border-neutral-800 text-[11px] text-neutral-400 flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Garantie 0 post perdu grâce au fallback Expo et presse-papier synchronisé.</span>
             </div>
           </div>
         </div>

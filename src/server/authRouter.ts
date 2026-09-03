@@ -677,7 +677,7 @@ function renderLegalTermsHtml(res: ServerResponse) {
       <body>
         <div class="container">
           <h1>Conditions Générales d'Utilisation (CGU)</h1>
-          <div class="meta">SocialClone AI V3.0 • Dernière mise à jour : Août 2026</div>
+          <div class="meta">SocialClone AI • Dernière mise à jour : Août 2026</div>
           
           <h2>1. Objet</h2>
           <p>Les présentes Conditions Générales régissent l'accès et l'utilisation de la plateforme SocialClone AI, permettant la création de clones vocaux et visuels multimodaux synchronisés avec les réseaux sociaux (Instagram Meta Graph API, TikTok for Developers et Google / YouTube Shorts via les APIs officielles).</p>
@@ -717,7 +717,7 @@ function renderPrivacyPolicyHtml(res: ServerResponse) {
       <body>
         <div class="container">
           <h1>Politique de Confidentialité & RGPD</h1>
-          <div class="meta">SocialClone AI V3.0 • Dernière mise à jour : Août 2026</div>
+          <div class="meta">SocialClone AI • Dernière mise à jour : Août 2026</div>
           
           <h2>1. Collecte des Données</h2>
           <p>SocialClone AI collecte uniquement les informations nécessaires au fonctionnement du service via les autorisations OAuth accordées (nom d'utilisateur, avatar, statistiques de base et liste des vidéos publiques 9:16 issues de TikTok, Instagram ou Google/YouTube).</p>
