@@ -32,11 +32,10 @@ const PLANS_CATALOG = [
   {
     id: 'PRO',
     name: 'Formule Pro Créateur',
-    priceMonthlyEur: 9,
-    priceAnnualEur: 89, // ~7.4€/mo (-20%)
-    priceUsdIap: 9.99,
+    priceMonthlyEur: 9.99,
+    priceAnnualEur: 95.99,
     isPopular: true,
-    badge: 'Le Plus Populaire • Zéro Risque',
+    badge: 'Recommandé Créateurs',
     features: [
       '1 compte par réseau supporté (TikTok, Instagram, YouTube, Threads)',
       'Clonage intégral + Studio Guidé Mobile & Web',
@@ -44,7 +43,7 @@ const PLANS_CATALOG = [
       'Studio Carrousels & Discussions illimité',
       'Copilote DM 24h : 100% Auto, Semi-Auto & Hybride',
       'Smart Scheduler : Optimisation IA + Auto-Fallback Niveau 2',
-      '100 crédits vidéo 9:16 mensuels inclus',
+      '50 crédits vidéo 9:16 mensuels inclus',
       'Zéro filigrane / Export marque blanche',
     ],
     limits: {
@@ -59,16 +58,17 @@ const PLANS_CATALOG = [
   {
     id: 'AGENCY',
     name: 'Formule Agence & Multi-Comptes',
-    priceMonthlyEur: 99,
-    priceAnnualEur: 990,
-    badge: 'Sur Devis / Sur Mesure',
+    priceMonthlyEur: 0,
+    priceAnnualEur: 0,
+    isQuoteRequired: true,
+    badge: 'Sur Devis',
     features: [
       'Gestion multi-comptes créateurs sur mesure',
       'Multi-clones et avatars dédiés par marque',
       '🔄 1 recalibrage / 30 jours par compte créateur',
       'Studio IA et Copilote DM illimités',
       'Espaces de travail avec rôles et permissions (RBAC)',
-      'Facturation consolidée Stripe Invoice / Chorus Pro',
+      'Facturation consolidée & TVA déductible',
       'Support prioritaire dédié 7j/7 et onboarding personnalisé',
     ],
     limits: {
@@ -262,3 +262,41 @@ billingRouter.post('/upgrade-plan', (req: Request, res: Response) => {
     res.status(500).json({ error: err.message || 'Erreur mise à niveau forfait' });
   }
 });
+
+// 8. POST /api/billing/request-quote (Formule Agence Sur Devis)
+billingRouter.post('/request-quote', (req: Request, res: Response) => {
+  try {
+    const { email, companyName, creatorsCount = 10, notes } = req.body;
+
+    if (!email) {
+      res.status(400).json({ error: 'Une adresse email est requise.' });
+      return;
+    }
+
+    const quoteId = 'quote_' + Math.random().toString(36).substring(2, 10);
+    console.log(`📋 [Demande de Devis] Devis ${quoteId} reçu pour ${companyName || email} (${creatorsCount} créateurs).`);
+
+    res.json({
+      success: true,
+      quoteId,
+      message: 'Votre demande de devis personnalisé a été enregistrée avec succès. Notre équipe vous recontactera sous 24h ouvrées.',
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Erreur enregistrement devis' });
+  }
+});
+
+// 9. POST /api/billing/webhook (Stripe Webhook Listener)
+billingRouter.post('/webhook', (req: Request, res: Response) => {
+  const event = req.body;
+  console.log(`💳 [Stripe Webhook] Événement reçu: ${event?.type || 'checkout.session.completed'}`);
+  res.status(200).json({ received: true });
+});
+
+// 10. POST /api/billing/revenuecat-webhook (Mobile In-App Purchase Listener)
+billingRouter.post('/revenuecat-webhook', (req: Request, res: Response) => {
+  const event = req.body?.event;
+  console.log(`📱 [RevenueCat Webhook] Événement reçu: ${event?.type || 'RENEWAL'}`);
+  res.status(200).json({ received: true });
+});
+

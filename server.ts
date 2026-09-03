@@ -8,6 +8,9 @@ import { copilotRouter } from './src/server/copilotRouter';
 import { schedulerRouter } from './src/server/schedulerRouter';
 import { billingRouter } from './src/server/billingRouter';
 import { growthRouter } from './src/server/growthRouter';
+import { webhookRouter } from './src/server/webhookRouter';
+import { jobQueue } from './src/server/jobQueue';
+import { firebaseDb } from './src/server/firebase';
 
 async function startServer() {
   const app = express();
@@ -22,6 +25,48 @@ async function startServer() {
   app.use('/api/scheduler', schedulerRouter);
   app.use('/api/billing', billingRouter);
   app.use('/api/growth', growthRouter);
+  app.use('/api/webhooks', webhookRouter);
+
+  // Asynchronous Job Queue Endpoints (Polling & Server-Sent Events)
+  app.post('/api/jobs/create', async (req, res) => {
+    try {
+      const { type = 'VIDEO_RENDER', prompt, userId } = req.body;
+      const job = await jobQueue.createJob({ type, prompt, userId });
+      res.json({ success: true, job });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  app.get('/api/jobs/:id', async (req, res) => {
+    const job = await jobQueue.getJob(req.params.id);
+    if (!job) {
+      return res.status(404).json({ error: 'Tâche introuvable' });
+    }
+    res.json({ success: true, job });
+  });
+
+  app.get('/api/jobs/:id/progress', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    const unsubscribe = jobQueue.subscribe(req.params.id, (job) => {
+      res.write(`data: ${JSON.stringify(job)}\n\n`);
+      if (job.status === 'COMPLETED' || job.status === 'FAILED') {
+        res.end();
+      }
+    });
+
+    req.on('close', () => {
+      unsubscribe();
+    });
+  });
+
+  // Firebase Firestore Service Status
+  app.get('/api/firebase/status', (_req, res) => {
+    res.json({ success: true, ...firebaseDb.getStatus() });
+  });
 
   // Unified Multi-Provider OAuth (TikTok, Instagram/Meta, Google/YouTube) & Ingestion API Middleware
   app.use((req, res, next) => {
@@ -32,8 +77,7 @@ async function startServer() {
   app.get('/api/health', (_req, res) => {
     res.json({
       status: 'ok',
-      service: 'SocialClone AI Master Engine',
-      version: '3.0.0',
+      service: 'SocialClone AI Engine',
       timestamp: new Date().toISOString(),
       modules: {
         clone: 'ACTIVE',
@@ -42,6 +86,9 @@ async function startServer() {
         scheduler: 'ACTIVE',
         billing: 'ACTIVE',
         growth: 'ACTIVE',
+        webhooks: 'ACTIVE',
+        jobQueue: 'ACTIVE',
+        firebase: 'ACTIVE',
       },
     });
   });
