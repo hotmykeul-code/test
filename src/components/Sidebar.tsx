@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { 
   Sparkles, 
   LayoutDashboard, 
@@ -11,7 +11,8 @@ import {
   ChevronRight, 
   ChevronLeft,
   Flame,
-  Fingerprint
+  Fingerprint,
+  Share2
 } from 'lucide-react';
 import type { UserSession } from './AuthModal';
 
@@ -21,6 +22,7 @@ export type ActiveTab =
   | 'studio' 
   | 'copilot' 
   | 'scheduler' 
+  | 'accounts'
   | 'pricing';
 
 interface SidebarProps {
@@ -50,6 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'studio', label: 'Studio IA Multi-Formats', icon: Clapperboard, badge: '9:16' },
     { id: 'copilot', label: 'Copilote DM 24h', icon: MessageSquare, badge: 'Auto' },
     { id: 'scheduler', label: 'Smart Scheduler', icon: Calendar, badge: 'IA' },
+    { id: 'accounts', label: 'Comptes & Réseaux', icon: Share2, badge: 'OAuth' },
     { id: 'pricing', label: 'Tarifs & Crédits', icon: CreditCard },
   ];
 

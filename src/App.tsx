@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -19,6 +19,7 @@ import { Footer } from './components/Footer';
 import { OnboardingModal } from './components/OnboardingModal';
 import { LegalModals } from './components/LegalModals';
 import { AuthModal, type UserSession } from './components/AuthModal';
+import { ConnectedAccounts } from './components/ConnectedAccounts';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
@@ -100,6 +101,8 @@ export default function App() {
         return <FeaturesCopilotDM onOpenOnboarding={handleOpenOnboarding} />;
       case 'scheduler':
         return <FeaturesScheduler onOpenOnboarding={handleOpenOnboarding} />;
+      case 'accounts':
+        return <ConnectedAccounts onOpenOnboarding={handleOpenOnboarding} userSession={userSession} />;
       case 'pricing':
         return <PricingSection onOpenOnboarding={handleOpenOnboarding} />;
       default:

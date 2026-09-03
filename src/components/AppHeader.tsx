@@ -39,6 +39,10 @@ const TAB_TITLES: Record<ActiveTab, { title: string; subtitle: string }> = {
     title: 'Smart Scheduler & Planificateur Résilient',
     subtitle: 'Optimisation prédictive d\'audience et publication automatisée multicanaux',
   },
+  accounts: {
+    title: 'Comptes & Réseaux Sociaux Synchronisés',
+    subtitle: 'Gérez vos connexions officielles TikTok, Instagram, YouTube et Threads pour l\'ingestion et la publication',
+  },
   pricing: {
     title: 'Tarifs, Abonnements & Crédits Vidéo',
     subtitle: 'Gérez votre formule Pro (9,99 €/mois), vos devis et vos recharges de crédits',

@@ -56,29 +56,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleOAuthLogin = async (provider: 'google' | 'meta' | 'tiktok' | 'apple') => {
+  const handleOAuthLogin = async (provider: 'google' | 'apple') => {
     setLoadingProvider(provider);
     setErrorMessage(null);
 
     try {
-      const providerProfiles: Record<string, { name: string; email: string; avatar: string; handle: string }> = {
+      const providerProfiles: Record<'google' | 'apple', { name: string; email: string; avatar: string; handle: string }> = {
         google: {
           handle: 'AlexandreRiviere',
           name: 'Alexandre Rivière',
           email: 'alex.riviere.creator@gmail.com',
           avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-        },
-        meta: {
-          handle: 'SarahCreations',
-          name: 'Sarah Benali',
-          email: 'sarah.creatrice@instagram.com',
-          avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-        },
-        tiktok: {
-          handle: 'LucasStudio',
-          name: 'Lucas TikTok Studio',
-          email: 'lucas.shorts@tiktok.com',
-          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
         },
         apple: {
           handle: 'ClaraD',
@@ -120,8 +108,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         email: backendUser?.email || selected.email,
         avatar: backendUser?.avatarUrl || selected.avatar,
         provider: provider,
-        plan: backendUser?.plan || (provider === 'tiktok' ? 'FREE' : 'PRO'),
-        credits: backendUser?.creditsRemaining ?? (provider === 'tiktok' ? 10 : 50),
+        plan: backendUser?.plan || 'FREE',
+        credits: backendUser?.creditsRemaining ?? 10,
       };
 
       localStorage.setItem('socialclone_user_session', JSON.stringify(user));
@@ -274,9 +262,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
-        {/* Multi-Provider OAuth Buttons */}
-        <div className="space-y-2.5 mb-6">
-          {/* 1. Google OAuth */}
+        {/* Multi-Provider OAuth Buttons (Email-based verification only) */}
+        <div className="space-y-2.5 mb-5">
+          {/* 1. Google OAuth (provides verified email) */}
           <button
             type="button"
             disabled={Boolean(loadingProvider)}
@@ -308,41 +296,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <span>Continuer avec Google</span>
           </button>
 
-          {/* 2. Meta / Instagram OAuth */}
-          <button
-            type="button"
-            disabled={Boolean(loadingProvider)}
-            onClick={() => handleOAuthLogin('meta')}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium text-xs transition-all shadow-sm active:scale-[0.99] disabled:opacity-50 cursor-pointer"
-          >
-            {loadingProvider === 'meta' ? (
-              <Loader2 className="w-4 h-4 animate-spin text-white" />
-            ) : (
-              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                <path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z" />
-              </svg>
-            )}
-            <span>Continuer avec Meta (Instagram / Facebook)</span>
-          </button>
-
-          {/* 3. TikTok OAuth */}
-          <button
-            type="button"
-            disabled={Boolean(loadingProvider)}
-            onClick={() => handleOAuthLogin('tiktok')}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700 font-medium text-xs transition-all shadow-sm active:scale-[0.99] disabled:opacity-50 cursor-pointer"
-          >
-            {loadingProvider === 'tiktok' ? (
-              <Loader2 className="w-4 h-4 animate-spin text-white" />
-            ) : (
-              <svg className="w-4 h-4 fill-current text-white" viewBox="0 0 24 24">
-                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.81 4.47 6.27 6.27 0 0 0 1.93-4.46V8.62a8.28 8.28 0 0 0 4.85 1.54V6.71a4.88 4.88 0 0 1-1-.02z" />
-              </svg>
-            )}
-            <span>Continuer avec TikTok</span>
-          </button>
-
-          {/* 4. Apple OAuth */}
+          {/* 2. Apple OAuth (provides verified email) */}
           <button
             type="button"
             disabled={Boolean(loadingProvider)}
@@ -360,11 +314,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </button>
         </div>
 
+        {/* Informative Synchronisation Note */}
+        <div className="mb-5 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300 flex items-start gap-2">
+          <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <span>
+            <strong>Email obligatoire :</strong> Un email vérifié est requis pour sécuriser votre compte. Vos comptes <strong>TikTok et Instagram</strong> seront synchronisés dans l'onglet <em>Comptes & Réseaux</em> après connexion.
+          </span>
+        </div>
+
         {/* Divider */}
-        <div className="relative flex items-center justify-center mb-6">
+        <div className="relative flex items-center justify-center mb-5">
           <div className="w-full border-t border-neutral-800" />
           <span className="absolute px-3 bg-neutral-900 text-[10px] uppercase font-semibold text-neutral-500 tracking-wider">
-            ou avec votre email
+            ou par email et mot de passe
           </span>
         </div>
 
