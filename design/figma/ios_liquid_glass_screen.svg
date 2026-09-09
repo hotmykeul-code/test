@@ -1,0 +1,181 @@
+<svg width="393" height="852" viewBox="0 0 393 852" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="bgGlowIndigo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(90 180) rotate(55) scale(280)">
+      <stop stop-color="#4F46E5" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#07090E" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlowCyan" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(320 540) rotate(-40) scale(260)">
+      <stop stop-color="#06B6D4" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#07090E" stop-opacity="0"/>
+    </radialGradient>
+    
+    <!-- Specular Border Gradient -->
+    <linearGradient id="specularBorder" x1="0" y1="0" x2="353" y2="280" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white" stop-opacity="0.5"/>
+      <stop offset="0.4" stop-color="white" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="white" stop-opacity="0.03"/>
+    </linearGradient>
+
+    <!-- Radar Fill Gradient -->
+    <radialGradient id="radarFill" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(176 130) scale(110)">
+      <stop stop-color="#22D3EE" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#6366F1" stop-opacity="0.1"/>
+    </radialGradient>
+
+    <!-- Glass Filter Backdrop -->
+    <filter id="glassBlur" x="-20" y="-20" width="400" height="400" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+  </defs>
+
+  <!-- Device Background -->
+  <rect width="393" height="852" rx="48" fill="#07090E"/>
+  <circle cx="90" cy="180" r="280" fill="url(#bgGlowIndigo)"/>
+  <circle cx="320" cy="540" r="260" fill="url(#bgGlowCyan)"/>
+
+  <!-- Dynamic Island -->
+  <rect x="134" y="11" width="125" height="35" rx="17.5" fill="#000000"/>
+  <circle cx="236" cy="28.5" r="5.5" fill="#1C1C1E"/>
+
+  <!-- Status Bar Items -->
+  <text x="36" y="34" fill="#FFFFFF" font-family="-apple-system, SF Pro Text, Inter, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2">9:41</text>
+  <path d="M340 23.5C340 22.12 341.12 21 342.5 21H362.5C363.88 21 365 22.12 365 23.5V31.5C365 32.88 363.88 34 362.5 34H342.5C341.12 34 340 32.88 340 31.5V23.5Z" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="1"/>
+  <rect x="342" y="23" width="16" height="9" rx="1.5" fill="#FFFFFF"/>
+  <path d="M366.5 26V29" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="1" stroke-linecap="round"/>
+
+  <!-- Navigation Bar (iOS) -->
+  <text x="20" y="85" fill="#FFFFFF" font-family="-apple-system, SF Pro Display, Inter, sans-serif" font-size="24" font-weight="700">Calibrage du Clone</text>
+  <rect x="339" y="65" width="34" height="34" rx="17" fill="white" fill-opacity="0.1"/>
+  <circle cx="356" cy="82" r="7" stroke="#22D3EE" stroke-width="1.8"/>
+
+  <!-- CARD 1: ToneRadar Glass Card -->
+  <g transform="translate(20, 110)">
+    <!-- Glass Background with Border -->
+    <rect width="353" height="280" rx="22" fill="white" fill-opacity="0.08"/>
+    <rect x="0.5" y="0.5" width="352" height="279" rx="21.5" stroke="url(#specularBorder)" stroke-width="1"/>
+    
+    <!-- Card Header -->
+    <text x="20" y="32" fill="#FFFFFF" font-family="-apple-system, Inter, sans-serif" font-size="16" font-weight="600">ToneRadar™ 8 Axes</text>
+    <rect x="238" y="16" width="95" height="24" rx="12" fill="#10B981" fill-opacity="0.18"/>
+    <text x="249" y="32" fill="#10B981" font-family="-apple-system, Inter, sans-serif" font-size="11" font-weight="600">● Verrouillé 30j</text>
+
+    <!-- Spider Chart Grid -->
+    <polygon points="176.5,58 238.5,83.5 264,145.5 238.5,207.5 176.5,233 114.5,207.5 89,145.5 114.5,83.5" stroke="white" stroke-opacity="0.1" stroke-width="1" fill="none"/>
+    <polygon points="176.5,87 217.8,104 234.8,145.5 217.8,187 176.5,204 135.2,187 118.2,145.5 135.2,104" stroke="white" stroke-opacity="0.1" stroke-width="1" fill="none"/>
+    <polygon points="176.5,116 197.1,124.5 205.6,145.5 197.1,166.5 176.5,175 155.9,166.5 147.4,145.5 155.9,124.5" stroke="white" stroke-opacity="0.1" stroke-width="1" fill="none"/>
+
+    <!-- Spider Chart Data Polygon -->
+    <polygon points="176.5,65 242,100 252,145 220,195 176.5,220 120,185 105,145 130,90" fill="url(#radarFill)" stroke="#22D3EE" stroke-width="2.5"/>
+    <circle cx="176.5" cy="65" r="4.5" fill="#22D3EE"/>
+    <circle cx="242" cy="100" r="4.5" fill="#22D3EE"/>
+    <circle cx="252" cy="145" r="4.5" fill="#22D3EE"/>
+    <circle cx="220" cy="195" r="4.5" fill="#22D3EE"/>
+    <circle cx="176.5" cy="220" r="4.5" fill="#22D3EE"/>
+    <circle cx="120" cy="185" r="4.5" fill="#22D3EE"/>
+    <circle cx="105" cy="145" r="4.5" fill="#22D3EE"/>
+    <circle cx="130" cy="90" r="4.5" fill="#22D3EE"/>
+
+    <!-- Axis Labels -->
+    <text x="176.5" y="52" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="10" text-anchor="middle">Chaleur (85%)</text>
+    <text x="256" y="80" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="10" text-anchor="start">Audace</text>
+    <text x="272" y="149" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="10" text-anchor="start">Humour</text>
+    <text x="240" y="215" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="10" text-anchor="start">Vulgarisation</text>
+    <text x="176.5" y="248" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="10" text-anchor="middle">Storytelling</text>
+    <text x="110" y="215" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="10" text-anchor="end">Rythme</text>
+    <text x="80" y="149" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="10" text-anchor="end">Autorité</text>
+    <text x="100" y="80" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="10" text-anchor="end">Empathie</text>
+  </g>
+
+  <!-- CARD 2: Voice Audio Sample Glass Card -->
+  <g transform="translate(20, 410)">
+    <rect width="353" height="150" rx="22" fill="white" fill-opacity="0.08"/>
+    <rect x="0.5" y="0.5" width="352" height="149" rx="21.5" stroke="url(#specularBorder)" stroke-width="1"/>
+    
+    <text x="20" y="32" fill="#FFFFFF" font-family="-apple-system, Inter, sans-serif" font-size="15" font-weight="600">Empreinte Vocale (AI Act)</text>
+    
+    <!-- Audio Waveform -->
+    <g transform="translate(20, 52)">
+      <rect x="0" y="14" width="3" height="12" rx="1.5" fill="#22D3EE"/>
+      <rect x="6" y="8" width="3" height="24" rx="1.5" fill="#22D3EE"/>
+      <rect x="12" y="2" width="3" height="36" rx="1.5" fill="#22D3EE"/>
+      <rect x="18" y="10" width="3" height="20" rx="1.5" fill="#22D3EE"/>
+      <rect x="24" y="0" width="3" height="40" rx="1.5" fill="#22D3EE"/>
+      <rect x="30" y="6" width="3" height="28" rx="1.5" fill="#22D3EE"/>
+      <rect x="36" y="12" width="3" height="16" rx="1.5" fill="#22D3EE"/>
+      <rect x="42" y="4" width="3" height="32" rx="1.5" fill="#22D3EE"/>
+      <rect x="48" y="8" width="3" height="24" rx="1.5" fill="#22D3EE"/>
+      <rect x="54" y="14" width="3" height="12" rx="1.5" fill="#22D3EE"/>
+      <rect x="60" y="16" width="3" height="8" rx="1.5" fill="#22D3EE"/>
+      
+      <!-- Unplayed bars -->
+      <rect x="66" y="12" width="3" height="16" rx="1.5" fill="white" fill-opacity="0.25"/>
+      <rect x="72" y="4" width="3" height="32" rx="1.5" fill="white" fill-opacity="0.25"/>
+      <rect x="78" y="8" width="3" height="24" rx="1.5" fill="white" fill-opacity="0.25"/>
+      <rect x="84" y="2" width="3" height="36" rx="1.5" fill="white" fill-opacity="0.25"/>
+      <rect x="90" y="10" width="3" height="20" rx="1.5" fill="white" fill-opacity="0.25"/>
+      <rect x="96" y="14" width="3" height="12" rx="1.5" fill="white" fill-opacity="0.25"/>
+      <rect x="102" y="6" width="3" height="28" rx="1.5" fill="white" fill-opacity="0.25"/>
+      <rect x="108" y="0" width="3" height="40" rx="1.5" fill="white" fill-opacity="0.25"/>
+      <rect x="114" y="8" width="3" height="24" rx="1.5" fill="white" fill-opacity="0.25"/>
+      <rect x="120" y="14" width="3" height="12" rx="1.5" fill="white" fill-opacity="0.25"/>
+    </g>
+
+    <text x="160" y="76" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="12">Échantillon 20s analysé</text>
+    
+    <!-- Controls row -->
+    <rect x="20" y="106" width="145" height="32" rx="16" fill="#10B981" fill-opacity="0.2"/>
+    <text x="32" y="126" fill="#10B981" font-family="-apple-system, Inter, sans-serif" font-size="12" font-weight="600">✓ Clone Calibré 99.4%</text>
+
+    <rect x="180" y="106" width="153" height="32" rx="16" fill="#6366F1" fill-opacity="0.25"/>
+    <text x="195" y="126" fill="#A5B4FC" font-family="-apple-system, Inter, sans-serif" font-size="12" font-weight="600">Tester la voix IA</text>
+  </g>
+
+  <!-- CARD 3: Copilot 24h Meta Compliance Card -->
+  <g transform="translate(20, 580)">
+    <rect width="353" height="120" rx="22" fill="white" fill-opacity="0.08"/>
+    <rect x="0.5" y="0.5" width="352" height="119" rx="21.5" stroke="url(#specularBorder)" stroke-width="1"/>
+
+    <text x="20" y="32" fill="#FFFFFF" font-family="-apple-system, Inter, sans-serif" font-size="15" font-weight="600">Copilote DM — Meta &amp; TikTok</text>
+    
+    <!-- Kill switch toggle -->
+    <rect x="290" y="18" width="44" height="24" rx="12" fill="#10B981"/>
+    <circle cx="322" cy="30" r="9" fill="#FFFFFF"/>
+
+    <text x="20" y="58" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="13">Mode Actif : Semi-Automatique (3 propositions)</text>
+    
+    <rect x="20" y="74" width="105" height="26" rx="13" fill="#3B82F6" fill-opacity="0.2"/>
+    <text x="32" y="91" fill="#60A5FA" font-family="-apple-system, Inter, sans-serif" font-size="11" font-weight="600">⏱ Fenêtre : 23h 48m</text>
+
+    <rect x="135" y="74" width="80" height="26" rx="13" fill="#10B981" fill-opacity="0.2"/>
+    <text x="146" y="91" fill="#34D399" font-family="-apple-system, Inter, sans-serif" font-size="11" font-weight="600">42 traités</text>
+  </g>
+
+  <!-- Cupertino Floating Glass Tab Bar -->
+  <g transform="translate(24, 755)">
+    <rect width="345" height="64" rx="32" fill="white" fill-opacity="0.12"/>
+    <rect x="0.5" y="0.5" width="344" height="63" rx="31.5" stroke="url(#specularBorder)" stroke-width="1"/>
+
+    <!-- Tab items -->
+    <g transform="translate(35, 18)">
+      <circle cx="10" cy="10" r="8" stroke="#94A3B8" stroke-width="1.8" fill="none"/>
+      <text x="10" y="36" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="9" text-anchor="middle">Dashboard</text>
+    </g>
+    <g transform="translate(105, 18)">
+      <rect x="2" y="3" width="16" height="14" rx="3" stroke="#94A3B8" stroke-width="1.8" fill="none"/>
+      <text x="10" y="36" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="9" text-anchor="middle">Studio</text>
+    </g>
+    <g transform="translate(175, 18)">
+      <rect x="2" y="2" width="16" height="16" rx="4" stroke="#94A3B8" stroke-width="1.8" fill="none"/>
+      <text x="10" y="36" fill="#94A3B8" font-family="-apple-system, Inter, sans-serif" font-size="9" text-anchor="middle">Planning</text>
+    </g>
+    <!-- Active Tab: Clone -->
+    <g transform="translate(245, 18)">
+      <circle cx="10" cy="10" r="9" stroke="#22D3EE" stroke-width="2" fill="#22D3EE" fill-opacity="0.2"/>
+      <text x="10" y="36" fill="#22D3EE" font-family="-apple-system, Inter, sans-serif" font-size="9" font-weight="700" text-anchor="middle">Clone</text>
+    </g>
+  </g>
+
+  <!-- iOS Home Bar Indicator -->
+  <rect x="127" y="836" width="139" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.4"/>
+</svg>
